@@ -6,7 +6,7 @@
         <VerticalStackLayout>
 
 
-            <!-- Lista de tareas -->
+            <!-- Lista de compras -->
             <CollectionView x:Name="tasksList"
                             SelectionMode="Single"
                             SelectionChanged="OnTaskSelected" >
@@ -21,11 +21,14 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-        <!-- Botón para agregar tarea -->
+        <!-- Botón para agregar compra -->
        
 
          </VerticalStackLayout>
-    <Button Text="+"
+
+        <!-- Botón para agregar compra -->
+
+        <Button Text="+"
          FontSize="Large"
          CornerRadius="30"
          BackgroundColor="Black"

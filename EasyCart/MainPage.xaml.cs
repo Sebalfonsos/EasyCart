@@ -18,7 +18,7 @@ namespace EasyCart
 
         async void OnAddTaskClicked(object sender, EventArgs e)
         {
-            string taskName = await DisplayPromptAsync("Nueva Tarea", "Ingrese el nombre de la tarea", "Guardar", "Cancelar", "Nombre de la tarea", 250);
+            string taskName = await DisplayPromptAsync("Nueva Compra", "Ingrese el nombre del producto", "Guardar", "Cancelar", "Nombre del producto", 250);
             if (!string.IsNullOrWhiteSpace(taskName))
             {
                 tasks.Add(new TaskItem { TaskName = taskName, IsCompleted = false });
@@ -34,7 +34,7 @@ namespace EasyCart
         {
                 // Get the selected item
                 var selectedItem = (TaskItem)e.CurrentSelection[0];
-                string action = await DisplayActionSheet("Acciones de Tarea", "Cancelar", null, "Editar", "Eliminar");
+                string action = await DisplayActionSheet("Acciones", "Cancelar", null, "Editar", "Eliminar");
                 if (action == "Editar")
                 {
                     await EditTask(selectedItem);
@@ -91,7 +91,6 @@ namespace EasyCart
                 }
             }
 
-            // Otros miembros y propiedades de la clase...
 
             public event PropertyChangedEventHandler PropertyChanged;
             protected virtual void OnPropertyChanged(string propertyName)
