@@ -8,7 +8,7 @@
     Title="EasyCart">
 
     <ShellContent
-        Title="Home"
+        Title="Lista de Compras"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 

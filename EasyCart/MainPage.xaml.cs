@@ -1,25 +1,108 @@
-﻿namespace EasyCart
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+
+
+namespace EasyCart
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        ObservableCollection<TaskItem> tasks;
+
 
         public MainPage()
         {
             InitializeComponent();
+            tasks = new ObservableCollection<TaskItem>();
+            tasksList.ItemsSource = tasks;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        async void OnAddTaskClicked(object sender, EventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            string taskName = await DisplayPromptAsync("Nueva Tarea", "Ingrese el nombre de la tarea", "Guardar", "Cancelar", "Nombre de la tarea", 250);
+            if (!string.IsNullOrWhiteSpace(taskName))
+            {
+                tasks.Add(new TaskItem { TaskName = taskName, IsCompleted = false });
+            }
         }
+
+
+        async void OnTaskSelected(object sender, SelectionChangedEventArgs e)
+
+        {
+
+            if(e.CurrentSelection != null)
+        {
+                // Get the selected item
+                var selectedItem = (TaskItem)e.CurrentSelection[0];
+                string action = await DisplayActionSheet("Acciones de Tarea", "Cancelar", null, "Editar", "Eliminar");
+                if (action == "Editar")
+                {
+                    await EditTask(selectedItem);
+                }
+                else if (action == "Eliminar")
+                {
+                    await DeleteTask(selectedItem);
+                }
+                // Do something with the selected item
+                Console.WriteLine($"Selected item: {selectedItem.TaskName}");
+            }
+        }
+
+        async Task EditTask(TaskItem SelectedTask)
+        {
+            if (SelectedTask != null)
+            {
+                string newTaskName = await DisplayPromptAsync("Editar Tarea", "Ingrese el nuevo nombre de la tarea", "Guardar", "Cancelar", "Nombre de la tarea", 250, null, SelectedTask.TaskName);
+                if (!string.IsNullOrWhiteSpace(newTaskName))
+                {
+                    SelectedTask.TaskName = newTaskName;
+                    OnPropertyChanged(nameof(SelectedTask.TaskName));
+                }
+            }
+        }
+
+        async Task DeleteTask(TaskItem SelectedTask)
+        {
+            if (SelectedTask != null)
+            {
+                tasks.Remove(SelectedTask);
+            }
+        }
+
+
+
+
+       
+
+        public class TaskItem : INotifyPropertyChanged
+        {
+            public bool IsCompleted { get; set; }
+            private string _taskName;
+            public string TaskName
+            {
+                get { return _taskName; }
+                set
+                {
+                    if (_taskName != value)
+                    {
+                        _taskName = value;
+                        OnPropertyChanged(nameof(TaskName));
+                    }
+                }
+            }
+
+            // Otros miembros y propiedades de la clase...
+
+            public event PropertyChangedEventHandler PropertyChanged;
+            protected virtual void OnPropertyChanged(string propertyName)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+
+
+
     }
 
 }
